@@ -8,14 +8,14 @@ import (
 )
 
 type timeString struct {
-	Regexp string
+	Regexp *regexp.Regexp
 	String string
 }
 
 var knownTimeStrings = []timeString{
-	{`[\d]{1,2}[\s][\w]+[\s][\d]{4}`, `2 January 2006 15:04:05`},
-	{`[\d]{1,2}[\s][\w]+[\s][\d]{2}`, `2 January 06 15:04:05`},
-	{`[\w]+[\s][\d]{1,2},[\s][\d]{4}`, `January 2, 2006, 03:04 PM`},
+	{regexp.MustCompile(`[\d]{1,2}[\s][\w]+[\s][\d]{4}`), `2 January 2006 15:04:05`},
+	{regexp.MustCompile(`[\d]{1,2}[\s][\w]+[\s][\d]{2}`), `2 January 06 15:04:05`},
+	{regexp.MustCompile(`[\w]+[\s][\d]{1,2},[\s][\d]{4}`), `January 2, 2006, 03:04 PM`},
 }
 
 func parseTimeString(s string) (*time.Time, error) {
@@ -23,13 +23,8 @@ func parseTimeString(s string) (*time.Time, error) {
 		return nil, fmt.Errorf("Passed string is too short: %s", s)
 	}
 	clearedString := s[strings.Index(s, ",")+2:]
-
 	for _, ts := range knownTimeStrings {
-		m, err := regexp.MatchString(ts.Regexp, clearedString)
-		if err != nil {
-			return nil, err
-		}
-		if !m {
+		if m := ts.Regexp.MatchString(clearedString); !m {
 			continue
 		}
 		res, err := time.Parse(ts.String, clearedString)
