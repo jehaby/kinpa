@@ -1,0 +1,8 @@
+kindle-parser
+db.sqlite
+db.sqlite-journal
+*.prof
+kinpa.test
+var/*
+*.svg
+examples/*
