@@ -52,11 +52,7 @@ var parseTimeStringTests = []struct {
 func TestParseTimeString(t *testing.T) {
 
 	for _, testData := range parseTimeStringTests {
-
 		res, err := parseTimeString(testData.s)
-
-		fmt.Println(testData, res)
-
 		if expected, ok := testData.expected.(time.Time); ok && !res.Equal(expected) {
 			t.Error("Date not equal! string: '", testData.s, "'| res: ", res.Local(), "| expected: ", expected.Local())
 		} else if err != nil && err.Error() != testData.e.Error() {
