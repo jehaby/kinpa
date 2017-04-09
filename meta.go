@@ -58,17 +58,19 @@ func parseMetaString(s string) (page int, location string, t time.Time, e error)
 
 }
 
+var locationRegexp = regexp.MustCompile("\\d+-\\d+")
+
 func parseLocation(s string) (string, error) {
-	re := regexp.MustCompile("\\d+-\\d+")
-	if res := re.FindString(s); res != "" {
+	if res := locationRegexp.FindString(s); res != "" {
 		return res, nil
 	}
 	return "", fmt.Errorf("Couldn't find location in string: %s", s)
 }
 
+var pageRegexp = regexp.MustCompile("\\d+")
+
 func parsePage(s string) (int, error) {
-	re := regexp.MustCompile("\\d+")
-	if res := re.FindString(s); res != "" {
+	if res := pageRegexp.FindString(s); res != "" {
 		res, _ := strconv.Atoi(res)
 		return res, nil
 	}
